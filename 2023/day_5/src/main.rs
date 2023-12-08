@@ -90,7 +90,7 @@ fn main() {
             println!("Time Elapsed: {}", elapsed.as_secs());
         }
         Err(e) => {
-            println!("Error");
+            println!("{}",e);
         }
     }
 
