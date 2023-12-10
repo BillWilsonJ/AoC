@@ -1,4 +1,6 @@
 use std::fs;
+use std::fs::File;
+use std::io::prelude::*;
 use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
 
@@ -70,10 +72,13 @@ fn main() {
     let mut part_2_answer = 0; 
 
     let mut loop_positions = vec![];
+    let mut loop_characters = vec![];
     for tile in tile_loop {
         loop_positions.push(tile.position);
+        loop_characters.push(tile.tile);
     }
 
+    let mut output_string = String::from("");
     for i in 0..max_cols {
         let mut winding_count = 0;
         for j in 0..max_rows {
@@ -81,6 +86,7 @@ fn main() {
             let current_position = Position{x:j,y:i};
             let position_below = Position{x:j,y:i+1};
             if loop_positions.contains(&current_position) {
+                output_string.push(grid[i][j]);
                 let current_position_index = loop_positions.iter().position(|r| *r == current_position).unwrap() as i32;
                 if loop_positions.contains(&position_below) {
                     let position_below_index = loop_positions.iter().position(|r| *r == position_below).unwrap() as i32;
@@ -96,11 +102,18 @@ fn main() {
             else if winding_count != 0 {
                 //found a tile inside
                 part_2_answer+=1;
+                output_string.push('I');
+            }
+            else {
+                output_string.push('O');
             }
         }
+        output_string.push('\n');
     }
 
     println!("Part 2 Answer: {}",part_2_answer);
+    fs::write("src\\output.txt", output_string).expect("Unable to write file");
+
 }
 
 #[derive(Debug, Default)]
